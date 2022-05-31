@@ -60,8 +60,10 @@ namespace Task_46
         {
             Random random = new Random();
             int rangeMaximalNumbers = 100;
-            int chanceUsingAbility = random.Next(rangeMaximalNumbers);
+            int chanceUsingAbility;
             int chanceAbility = 25;
+
+            chanceUsingAbility = random.Next(rangeMaximalNumbers);
 
             if (chanceUsingAbility < chanceAbility)
             {
@@ -70,7 +72,6 @@ namespace Task_46
         }
 
         protected virtual void UseAbility() { }
-
     }
 
     class Knight : Warrior
@@ -213,11 +214,13 @@ namespace Task_46
 
         private void ChooseWarrior(out Warrior Warrior)
         {
+            bool isNumberWarrior;
+
             ShowWarriors();
             Console.Write("\nВведите номер воина: ");
-            bool isNumber = int.TryParse(Console.ReadLine(), out int inputID);
+            isNumberWarrior = int.TryParse(Console.ReadLine(), out int inputID);
 
-            if (isNumber == false)
+            if (isNumberWarrior == false)
             {
                 Console.WriteLine("\nОшибка! Проверьте ввод.");
                 Warrior = null;
