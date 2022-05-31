@@ -151,7 +151,7 @@ namespace Task_46
     {
         private Warrior _firstWarrior;
         private Warrior _secondWarrior;
-        private List<Warrior> _Warriors = new List<Warrior>();
+        private List<Warrior> _warriors = new List<Warrior>();
 
         public bool TryCreativeFight()
         {
@@ -174,11 +174,11 @@ namespace Task_46
 
         public Arena()
         {
-            _Warriors.Add(new Knight("Рыцарь", 300, 30, 70, 1, "Молитва"));
-            _Warriors.Add(new Barbarian("Варвар", 350, 5, 55, 1.5, "Крик"));
-            _Warriors.Add(new Monk("Монах", 350, 25, 60, 1.5, "Ци"));
-            _Warriors.Add(new Assassin("Убийца", 300, 0, 50, 2, "Сюрикен"));
-            _Warriors.Add(new Vampire("Вампир", 250, 10, 45, 1, "Жатва"));
+            _warriors.Add(new Knight("Рыцарь", 300, 30, 70, 1, "Молитва"));
+            _warriors.Add(new Barbarian("Варвар", 350, 5, 55, 1.5, "Крик"));
+            _warriors.Add(new Monk("Монах", 350, 25, 60, 1.5, "Ци"));
+            _warriors.Add(new Assassin("Убийца", 300, 0, 50, 2, "Сюрикен"));
+            _warriors.Add(new Vampire("Вампир", 250, 10, 45, 1, "Жатва"));
         }
 
         public void ShowFightResult()
@@ -225,10 +225,10 @@ namespace Task_46
                 Console.WriteLine("\nОшибка! Проверьте ввод.");
                 Warrior = null;
             }
-            else if (inputID > 0 && inputID - 1 < _Warriors.Count)
+            else if (inputID > 0 && inputID - 1 < _warriors.Count)
             {
-                Warrior = _Warriors[inputID - 1];
-                _Warriors.Remove(Warrior);
+                Warrior = _warriors[inputID - 1];
+                _warriors.Remove(Warrior);
                 Console.WriteLine("\nВоин успешно выбран.");
             }
             else
@@ -242,10 +242,10 @@ namespace Task_46
         {
             Console.WriteLine("\nСписок доступный бойцов\n");
 
-            for (int i = 0; i < _Warriors.Count; i++)
+            for (int i = 0; i < _warriors.Count; i++)
             {
                 Console.Write(i + 1);
-                _Warriors[i].ShowWarriorStats();
+                _warriors[i].ShowWarriorStats();
             }
         }
     }
