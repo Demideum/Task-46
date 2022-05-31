@@ -1,0 +1,249 @@
+namespace Task_46
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isWork = true;
+
+            while (isWork)
+            {
+                Arena arena = new Arena();
+
+                if (arena.TryCreativeFight())
+                {
+                    Console.ReadKey();
+                    Console.Clear();
+                    arena.Battle();
+                    arena.ShowFightResult();
+                }
+            }
+        }
+    }
+
+    class Warrior
+    {
+        public string Name { get; protected set; }
+        public double Health { get; protected set; }
+        public int Armor { get; protected set; }
+        public double Damage { get; protected set; }
+        public double AttackSpeed { get; protected set; }
+        public string UniqueAbility { get; protected set; }
+
+        public Warrior(string name, double health, int armor, double damage, double attackSpeed, string uniqueAbility)
+        {
+            Name = name;
+            Health = health;
+            Armor = armor;
+            Damage = damage;
+            AttackSpeed = attackSpeed;
+            UniqueAbility = uniqueAbility;
+        }
+
+        public void TakeDamege(double damageWarrior, double attackSpeedWarrior)
+        {
+            double finalDamage = 0;
+
+            finalDamage = damageWarrior * attackSpeedWarrior;
+            Health -= finalDamage - Armor;
+
+            Console.WriteLine($"{Name} получил {finalDamage} урона, осталось здоровья {Health}");
+        }
+
+        public void ShowWarriorStats()
+        {
+            Console.WriteLine($" {Name}: Жизни - {Health},  Броня - {Armor}, Урон - {Damage}, " +
+                $"Скорость атаки - {AttackSpeed}. \nУникальная способность: {UniqueAbility}");
+        }
+
+        public void UseUniqueAbility()
+        {
+            Random random = new Random();
+            int rangeMaximalNumbers = 100;
+            int chanceUsingAbility = random.Next(rangeMaximalNumbers);
+            int chanceAbility = 25;
+
+            if (chanceUsingAbility < chanceAbility)
+            {
+                UseAbility();
+            }
+        }
+
+        protected virtual void UseAbility() { }
+
+    }
+
+    class Knight : Warrior
+    {
+        private int _armorGain = 10;
+        private double _damageGain = 30;
+        public Knight(string name, double health, int armor, double damage, double attackSpeed, string UniqueAbility) : base(name, health, armor, damage, attackSpeed, UniqueAbility) { }
+
+        protected override void UseAbility()
+        {
+            Console.WriteLine($"{Name} вздымает руки в небеса! {UniqueAbility} срывается с его губ. Броня становится крепче, а удары смертоноснее!");
+            Armor += _armorGain;
+            Damage += _damageGain;
+        }
+    }
+
+    class Barbarian : Warrior
+    {
+        private int _healthGain = 50;
+        private double _damageGain = 50;
+        private double _attackSpeedGain = 1.5;
+        public Barbarian(string name, double health, int armor, double damage, double attackSpeed, string UniqueAbility) : base(name, health, armor, damage, attackSpeed, UniqueAbility) { }
+
+        protected override void UseAbility()
+        {
+            Console.WriteLine($"\n{Name} издает рёв! {UniqueAbility} раздается на всю округу. Теряя жизни, удары становятся быстрее и сильнее!");
+            Health -= _healthGain;
+            Damage += _damageGain;
+            AttackSpeed += _attackSpeedGain;
+        }
+    }
+
+    class Monk : Warrior
+    {
+        private int _armorGain = 10;
+        private double _healthGain = 100;
+        public Monk(string name, double health, int armor, double damage, double attackSpeed, string UniqueAbility) : base(name, health, armor, damage, attackSpeed, UniqueAbility) { }
+
+        protected override void UseAbility()
+        {
+            Console.WriteLine($"\n{Name} входит в состояние глубокой концентрации! {UniqueAbility} увеличивет защиту и востанавливает часть здоровья!");
+            Armor += _armorGain;
+            Health += _healthGain;
+        }
+    }
+
+    class Assassin : Warrior
+    {
+
+        private int _damageGain = 100;
+
+        public Assassin(string name, double health, int armor, double damage, double attackSpeed, string UniqueAbility) : base(name, health, armor, damage, attackSpeed, UniqueAbility) { }
+
+        protected override void UseAbility()
+        {
+            Console.WriteLine($"\n{Name} делает, незаметное глазу, движение рукой! {UniqueAbility} находит свою цель и наносит огромный урон!");
+
+            Damage += _damageGain;
+        }
+    }
+
+    class Vampire : Warrior
+    {
+        private double _damageGain = 20;
+        private double _healthGain = 50;
+        public Vampire(string name, double health, int armor, double damage, double attackSpeed, string UniqueAbility) : base(name, health, armor, damage, attackSpeed, UniqueAbility) { }
+
+        protected override void UseAbility()
+        {
+            Console.WriteLine($"\n{Name} ментально пронзает сердце врага! {UniqueAbility} увеличивет силу атаки и востанавливает часть здоровья!");
+            Damage += _damageGain;
+            Health += _healthGain;
+        }
+    }
+
+    class Arena
+    {
+        private Warrior _firstWarrior;
+        private Warrior _secondWarrior;
+        private List<Warrior> _Warriors = new List<Warrior>();
+
+        public bool TryCreativeFight()
+        {
+            Console.WriteLine("\nПервый воин");
+            ChooseWarrior(out _firstWarrior);
+            Console.WriteLine("\nВторой воин");
+            ChooseWarrior(out _secondWarrior);
+
+            if (_firstWarrior == null || _secondWarrior == null)
+            {
+                Console.WriteLine("\nОшибка выбора бойца");
+                return false;
+            }
+            else
+            {
+                Console.WriteLine("\nБойцы выбраны");
+                return true;
+            }
+        }
+
+        public Arena()
+        {
+            _Warriors.Add(new Knight("Рыцарь", 300, 30, 70, 1, "Молитва"));
+            _Warriors.Add(new Barbarian("Варвар", 350, 5, 55, 1.5, "Крик"));
+            _Warriors.Add(new Monk("Монах", 350, 25, 60, 1.5, "Ци"));
+            _Warriors.Add(new Assassin("Убийца", 300, 0, 50, 2, "Сюрикен"));
+            _Warriors.Add(new Vampire("Вампир", 250, 10, 45, 1, "Жатва"));
+        }
+
+        public void ShowFightResult()
+        {
+            if (_firstWarrior.Health <= 0 && _secondWarrior.Health <= 0)
+            {
+                Console.WriteLine("В этот раз смерь получила бонус, оба бойца погибли!");
+            }
+            else if (_firstWarrior.Health <= 0)
+            {
+                Console.WriteLine($"\n{_secondWarrior.Name} победил!");
+            }
+            else if (_secondWarrior.Health <= 0)
+            {
+                Console.WriteLine($"\n{_firstWarrior.Name} победил!");
+            }
+        }
+
+        public void Battle()
+        {
+            while (_firstWarrior.Health > 0 && _secondWarrior.Health > 0)
+            {
+                _firstWarrior.ShowWarriorStats();
+                _secondWarrior.ShowWarriorStats();
+                _firstWarrior.TakeDamege(_secondWarrior.Damage, _secondWarrior.AttackSpeed);
+                _secondWarrior.TakeDamege(_firstWarrior.Damage, _firstWarrior.AttackSpeed);
+                _firstWarrior.UseUniqueAbility();
+                _secondWarrior.UseUniqueAbility();
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        private void ChooseWarrior(out Warrior Warrior)
+        {
+            ShowWarriors();
+            Console.Write("\nВведите номер воина: ");
+            bool isNumber = int.TryParse(Console.ReadLine(), out int inputID);
+
+            if (isNumber == false)
+            {
+                Console.WriteLine("\nОшибка! Проверьте ввод.");
+                Warrior = null;
+            }
+            else if (inputID > 0 && inputID - 1 < _Warriors.Count)
+            {
+                Warrior = _Warriors[inputID - 1];
+                _Warriors.Remove(Warrior);
+                Console.WriteLine("\nВоин успешно выбран.");
+            }
+            else
+            {
+                Console.WriteLine("\nОшибка! Проверьте ввод.");
+                Warrior = null;
+            }
+        }
+
+        private void ShowWarriors()
+        {
+            Console.WriteLine("\nСписок доступный бойцов\n");
+
+            for (int i = 0; i < _Warriors.Count; i++)
+            {
+                Console.Write(i + 1);
+                _Warriors[i].ShowWarriorStats();
+            }
+        }
+    }
+}
